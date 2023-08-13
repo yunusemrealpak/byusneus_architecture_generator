@@ -1,7 +1,14 @@
 {
   "name": "byusneus-architecture-generator",
   "displayName": "Byusneus Architecture Generator",
-  "description": "",
+  "description": "Easily create modules for Byusneus Architecture",
+  "publisher": "yunusemrealpak",
+  "author": {
+    "name": "Yunus Emre Alpak",
+    "url": "https://github.com/yunusemrealpak/",
+    "email": "yunusemrealpak@gmail.com"
+  },
+  "license": "MIT",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.81.0"
@@ -17,11 +24,6 @@
   "galleryBanner": {
     "color": "#181a1f",
     "theme": "dark"
-  },
-  "author": {
-    "name": "Yunus Emre Alpak",
-    "url": "https://github.com/yunusemrealpak/",
-    "email": "yunusemrealpak@gmail.com"
   },
   "repository": {
     "type": "git",
