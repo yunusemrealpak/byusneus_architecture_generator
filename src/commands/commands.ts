@@ -80,4 +80,8 @@ export class Commands {
         PubspecHelpers.updateProjectName(projectName);
         Helpers.runFlutterCreateCommand(flutterCreateCommand);
     }
+
+    public static async upgradeDartPackages(): Promise<void> {
+        Helpers.runFlutterCreateCommand('flutter pub upgrade --major-versions');
+    }
 }

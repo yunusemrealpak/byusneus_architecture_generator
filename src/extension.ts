@@ -15,6 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('byusneus-architecture-generator.cloneByusneusArchitecture', Commands.cloneByusneusArchitecture)
 	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('byusneus-architecture-generator.upgradeDartPackages', Commands.upgradeDartPackages)
+	);
 }
 
 export function deactivate() {}
