@@ -4,9 +4,17 @@ import { FileStrings } from '../files/file_strings';
 import { Helpers } from '../helpers/helpers';
 import { LayerType } from '../helpers/layer_type';
 import { FilePaths } from '../files/file_paths';
+import { PubspecHelpers } from '../helpers/pubspec_helpers';
 
 export class Commands {
-    public static async createModule(moduleName: string): Promise<void> {
+    public static async cloneByusneusArchitecture(): Promise<void> {
+        const githubUrl = 'https://github.com/yunusemrealpak/flutter_boilerplate.git';
+
+        // clone repo
+        Helpers.runFlutterCreateCommand(`git clone ${githubUrl} demo && mv demo/* . && mv demo/.gitignore . && rm -rf demo`);
+    }
+
+    public static async createModule(): Promise<void> {
         const rawResult = await vscode.window.showInputBox({
             prompt: "Enter module name",
             placeHolder: "Module names (auth, chat, home ...)",
@@ -33,7 +41,7 @@ export class Commands {
 
         Helpers.createFile(rawResult, selectedLayerType);
 
-        vscode.window.showInformationMessage('Module created successfully');
+        Helpers.showInformationMessage('Module created successfully');
     }
 
     public static async recreateAndroidAndIosFolders(): Promise<void> {
@@ -43,7 +51,13 @@ export class Commands {
         });
 
         if (!rawResult) {
-            vscode.window.showErrorMessage('Please enter a valid bundle id');
+            Helpers.showErrorMessage('Please enter a valid bundle id');
+            return;
+        }
+
+        // check rawResult is valid bundle id and contains '.' twice
+        if (!rawResult.includes('.') && rawResult.split('.').length !== 2) {
+            Helpers.showErrorMessage('Please enter a valid bundle id');
             return;
         }
 
@@ -53,8 +67,17 @@ export class Commands {
 
         let orgName = rawResult.split('.').slice(0, -1).join('.');
         let projectName = rawResult.split('.').pop();
+        
+        if (!orgName || !projectName) {
+            Helpers.showErrorMessage('Please enter a valid bundle id');
+            return;
+        }
+
         const flutterCreateCommand = `flutter create --org ${orgName} --project-name ${projectName} .`;
 
+        // get pubspec.yaml file path and update it with new project name
+        // recreate android and ios folders
+        PubspecHelpers.updateProjectName(projectName);
         Helpers.runFlutterCreateCommand(flutterCreateCommand);
     }
 }

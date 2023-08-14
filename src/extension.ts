@@ -11,6 +11,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('byusneus-architecture-generator.recreateAndroidAndIosFolders', Commands.recreateAndroidAndIosFolders)
 	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('byusneus-architecture-generator.cloneByusneusArchitecture', Commands.cloneByusneusArchitecture)
+	);
 }
 
 export function deactivate() {}

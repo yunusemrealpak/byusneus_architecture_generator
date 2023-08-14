@@ -44,7 +44,7 @@ import '../core/base_cubit.dart';
 import '${this.className}_state.dart';
 
 @injectable
-class ${classNameWidget}Cubit extends BaseCubit<${classNameWidget}State> {
+final class ${classNameWidget}Cubit extends BaseCubit<${classNameWidget}State> {
     ${classNameWidget}Cubit() : super(${classNameWidget}State.initial());
 
   void init() {}

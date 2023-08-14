@@ -42,6 +42,11 @@
         "command": "byusneus-architecture-generator.recreateAndroidAndIosFolders",
         "title": "Recreate Android and iOS Folders",
         "category": "Byusneus Architecture"
+      },
+      {
+        "command": "byusneus-architecture-generator.cloneByusneusArchitecture",
+        "title": "Clone Byusneus Architecture",
+        "category": "Byusneus Architecture"
       }
     ]
   },

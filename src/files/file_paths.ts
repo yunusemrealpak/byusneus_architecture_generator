@@ -17,6 +17,14 @@ export class FilePaths {
         return this.rootPath + '/ios';
     }
 
+    public static get pubspecPath(): string | undefined {
+        if (this.rootPath === undefined) {
+            return undefined;
+        }
+
+        return this.rootPath + '/pubspec.yaml';
+    }
+
     public static get libPath(): string | undefined {
         if (this.rootPath === undefined) {
             return undefined;

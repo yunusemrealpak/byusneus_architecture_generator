@@ -54,4 +54,8 @@ export class Helpers {
     public static showInformationMessage(message: string): void {
         vscode.window.showInformationMessage(message);
     }
+
+    public static showErrorMessage(message: string): void {
+        vscode.window.showErrorMessage(message);
+    }
 }
