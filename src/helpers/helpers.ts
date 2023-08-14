@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import { LayerType } from "./layer_type";
 import { FileStrings } from "../files/file_strings";
+import { FilePaths } from "../files/file_paths";
 
 export class Helpers {
     public static createFile(className: string, layerType: LayerType): void {
@@ -37,22 +38,20 @@ export class Helpers {
     }
 
     public static getLayerPath(layerType: LayerType): string | undefined {
-        if (this.libPath === undefined) {
+        if (FilePaths.libPath === undefined) {
             return undefined;
         }
 
-        return this.libPath + layerType;
+        return FilePaths.libPath + layerType;
     }
 
-    public static get libPath(): string | undefined {
-        if (this.rootPath === undefined) {
-            return undefined;
-        }
-
-        return this.rootPath + '/lib';
+    public static runFlutterCreateCommand(command: string): void {
+        const terminal = vscode.window.createTerminal();
+        terminal.sendText(command);
+        terminal.show();
     }
 
-    private static get rootPath(): string | undefined {
-        return vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+    public static showInformationMessage(message: string): void {
+        vscode.window.showInformationMessage(message);
     }
 }

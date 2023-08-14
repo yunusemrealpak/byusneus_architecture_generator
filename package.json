@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -36,6 +36,11 @@
       {
         "command": "byusneus-architecture-generator.createModule",
         "title": "Create Module",
+        "category": "Byusneus Architecture"
+      },
+      {
+        "command": "byusneus-architecture-generator.recreateAndroidAndIosFolders",
+        "title": "Recreate Android and iOS Folders",
         "category": "Byusneus Architecture"
       }
     ]
