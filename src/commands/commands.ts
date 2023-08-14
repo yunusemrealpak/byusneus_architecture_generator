@@ -33,7 +33,7 @@ export class Commands {
                 placeHolder: "Select layer types",
             }
         ) as LayerType;
-        
+
         if (!selectedLayerType) {
             vscode.window.showErrorMessage('Please select at least one layer type');
             return;
@@ -67,13 +67,13 @@ export class Commands {
 
         let orgName = rawResult.split('.').slice(0, -1).join('.');
         let projectName = rawResult.split('.').pop();
-        
+
         if (!orgName || !projectName) {
             Helpers.showErrorMessage('Please enter a valid bundle id');
             return;
         }
 
-        const flutterCreateCommand = `flutter create --org ${orgName} --project-name ${projectName} .`;
+        const flutterCreateCommand = `flutter create --org ${orgName} --project-name ${projectName} . && rm -rf lib/main.dart`;
 
         // get pubspec.yaml file path and update it with new project name
         // recreate android and ios folders
@@ -83,5 +83,22 @@ export class Commands {
 
     public static async upgradeDartPackages(): Promise<void> {
         Helpers.runFlutterCreateCommand('flutter pub upgrade --major-versions');
+    }
+
+    public static async updatePods(): Promise<void> {
+        const iosFolderPath = FilePaths.iosPath
+
+        Helpers.runFlutterCreateCommand(`
+        flutter clean
+        rm -rf ios/Pods
+        rm -rf ios/Podfile.lock
+        rm -rf ios/.symlinks
+        rm -rf ios/Flutter/Flutter.framework
+        rm -rf ios/Flutter/Flutter.podspec
+        flutter pub get
+        cd ios
+        pod install
+        cd ..
+        `);
     }
 }

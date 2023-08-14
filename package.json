@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -51,6 +51,11 @@
       {
         "command": "byusneus-architecture-generator.upgradeDartPackages",
         "title": "Upgrade Dart Packages",
+        "category": "Byusneus Architecture"
+      },
+      {
+        "command": "byusneus-architecture-generator.updatePods",
+        "title": "Update Pods",
         "category": "Byusneus Architecture"
       }
     ]

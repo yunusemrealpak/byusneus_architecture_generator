@@ -4,21 +4,19 @@ import { Commands } from './commands/commands';
 
 export function activate(context: vscode.ExtensionContext) {
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand('byusneus-architecture-generator.createModule', Commands.createModule)
-	);
+	const commands = [
+		{ name: 'createModule', command: Commands.createModule },
+		{ name: 'recreateAndroidAndIosFolders', command: Commands.recreateAndroidAndIosFolders },
+		{ name: 'cloneByusneusArchitecture', command: Commands.cloneByusneusArchitecture },
+		{ name: 'upgradeDartPackages', command: Commands.upgradeDartPackages },
+		{ name: 'updatePods', command: Commands.updatePods },
+	];
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand('byusneus-architecture-generator.recreateAndroidAndIosFolders', Commands.recreateAndroidAndIosFolders)
-	);
-
-	context.subscriptions.push(
-		vscode.commands.registerCommand('byusneus-architecture-generator.cloneByusneusArchitecture', Commands.cloneByusneusArchitecture)
-	);
-
-	context.subscriptions.push(
-		vscode.commands.registerCommand('byusneus-architecture-generator.upgradeDartPackages', Commands.upgradeDartPackages)
-	);
+	commands.forEach((cmd) => {
+		context.subscriptions.push(
+			vscode.commands.registerCommand(`byusneus-architecture-generator.${cmd.name}`, cmd.command)
+		);
+	});
 }
 
 export function deactivate() {}
