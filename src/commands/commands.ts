@@ -120,12 +120,12 @@ export class Commands {
             placeHolder: "to specify groups use dot(.) like 'group.key'",
         });
 
-        // check rawResult for dots. If it has dots, it means it has groups. if not it means it has no groups. So add key directly without group
         if (!rawResult) {
             Helpers.showErrorMessage('Please enter a valid language key');
             return;
         }
 
+        // check rawResult for dots. If it has dots, it means it has groups. if not it means it has no groups. So add key directly without group
         let result = rawResult.split('.');
         let groups = result.slice(0, -1);
         let key = result.pop() as string;
@@ -157,16 +157,10 @@ export class Commands {
         // tr.json => { "labels": { "modal_guest_title": "Guest" } }
         languageFiles.forEach((languageFile, index) => {
 
-            Helpers.showInformationMessage(languageFile.path);
-
             const languageFileContent = fs.readFileSync(languageFile.path, 'utf-8');
-
-            Helpers.showInformationMessage(languageFileContent);
 
             let languageFileContentJson = JSON.parse(languageFileContent);
 
-            Helpers.showInformationMessage(languageFileContentJson);
-            
             let group = languageFileContentJson;
             groups.forEach((groupItem) => {
                 if(!group[groupItem]) {
@@ -191,24 +185,5 @@ export class Commands {
 
 
         Helpers.showInformationMessage('Language key added successfully');
-
-        // read file content and parse it to json
-        // add language key to json
-        
     }
 }
-
-
-
-// languageFiles.forEach((languageFile) => {
-//     const languageGroup = rawResult.split('.')[0];
-//     const languageKey = rawResult.split('.')[1];
-//     const languageFileContent = require(languageFile);
-//     const languageFileContentJson = JSON.parse(languageFileContent);
-
-//     // check language key is already exists
-//     if (languageFileContentJson[languageData]) {
-//         Helpers.showErrorMessage('Language data already exists');
-//         return;
-//     }
-// });
