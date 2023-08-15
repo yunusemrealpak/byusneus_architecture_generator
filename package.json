@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -49,14 +49,19 @@
         "category": "Byusneus Architecture"
       },
       {
+        "command": "byusneus-architecture-generator.addLanguageKeysToLanguageFiles",
+        "title": "Add Language Keys To Language Files",
+        "category": "Byusneus Architecture Helpers"
+      },
+      {
         "command": "byusneus-architecture-generator.upgradeDartPackages",
         "title": "Upgrade Dart Packages",
-        "category": "Byusneus Architecture"
+        "category": "Byusneus Architecture Helpers"
       },
       {
         "command": "byusneus-architecture-generator.updatePods",
         "title": "Update Pods",
-        "category": "Byusneus Architecture"
+        "category": "Byusneus Architecture Helpers"
       }
     ]
   },

@@ -1,6 +1,15 @@
 import * as vscode from 'vscode';
+import { LanguageFile } from '../models/language_file';
 
 export class FilePaths {
+    public static languagePaths(languageFileNames: string[]): LanguageFile[] {
+        if (this.rootPath === undefined) {
+            return [];
+        }
+
+        return languageFileNames.map(languageFileName => new LanguageFile(languageFileName, `${this.rootPath}/assets/i10n/${languageFileName}.json`));
+    }
+
     public static get androidPath(): string | undefined {
         if (this.rootPath === undefined) {
             return undefined;

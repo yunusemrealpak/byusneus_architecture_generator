@@ -10,6 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 		{ name: 'cloneByusneusArchitecture', command: Commands.cloneByusneusArchitecture },
 		{ name: 'upgradeDartPackages', command: Commands.upgradeDartPackages },
 		{ name: 'updatePods', command: Commands.updatePods },
+		{ name: 'addLanguageKeysToLanguageFiles', command: Commands.addLanguageKeysToLanguageFiles },
 	];
 
 	commands.forEach((cmd) => {

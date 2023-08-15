@@ -101,4 +101,114 @@ export class Commands {
         cd ..
         `);
     }
+
+    public static async addLanguageKeysToLanguageFiles(): Promise<void> {
+        const languageFileNames = await vscode.window.showInputBox({
+            prompt: "Enter language file names",
+            placeHolder: "tr, en // tr-TR, en-US",
+        });
+
+        if (!languageFileNames) {
+            Helpers.showErrorMessage('Please enter a valid language file names');
+            return;
+        }
+
+        let languageFileNameArray = languageFileNames.split(',');
+
+        const rawResult = await vscode.window.showInputBox({
+            prompt: "Enter language key",
+            placeHolder: "to specify groups use dot(.) like 'group.key'",
+        });
+
+        // check rawResult for dots. If it has dots, it means it has groups. if not it means it has no groups. So add key directly without group
+        if (!rawResult) {
+            Helpers.showErrorMessage('Please enter a valid language key');
+            return;
+        }
+
+        let result = rawResult.split('.');
+        let groups = result.slice(0, -1);
+        let key = result.pop() as string;
+
+        Helpers.showInformationMessage(`Groups: ${groups} Key: ${key}`);
+
+        let meanings: string[] = [];
+
+        for (const file of languageFileNameArray) {
+            const meaning = await vscode.window.showInputBox({
+                prompt: `Enter ${file} language meaning`,
+                placeHolder: `<${file}> meaning`,
+            });
+
+            if (!meaning) {
+                Helpers.showErrorMessage(`Please enter a valid ${file} language meaning`);
+                return;
+            }
+
+            meanings.push(meaning);
+        }
+
+        // get all language files like tr.json, en.json
+        const languageFiles = FilePaths.languagePaths(languageFileNameArray);
+
+        // rawResult is language key like 'labels.modal_guest_title'
+        // split it by '.' and get first item like 'labels'. It is language group. Second item is language key
+        // get json file like 'tr.json' and add language key to it
+        // tr.json => { "labels": { "modal_guest_title": "Guest" } }
+        languageFiles.forEach((languageFile, index) => {
+
+            Helpers.showInformationMessage(languageFile.path);
+
+            const languageFileContent = fs.readFileSync(languageFile.path, 'utf-8');
+
+            Helpers.showInformationMessage(languageFileContent);
+
+            let languageFileContentJson = JSON.parse(languageFileContent);
+
+            Helpers.showInformationMessage(languageFileContentJson);
+            
+            let group = languageFileContentJson;
+            groups.forEach((groupItem) => {
+                if(!group[groupItem]) {
+                    group[groupItem] = {};
+                }
+                group = group[groupItem];
+            });
+
+            if(group[key]) {
+                Helpers.showErrorMessage('Language key already exists');
+                return;
+            }
+
+            group[key] = meanings[index];
+
+            fs.writeFileSync(languageFile.path, JSON.stringify(languageFileContentJson, null, 2));
+
+            setTimeout(() => {
+                Helpers.runFlutterCreateCommand('sh ./scripts/localization.sh');
+            }, 1000);
+        });
+
+
+        Helpers.showInformationMessage('Language key added successfully');
+
+        // read file content and parse it to json
+        // add language key to json
+        
+    }
 }
+
+
+
+// languageFiles.forEach((languageFile) => {
+//     const languageGroup = rawResult.split('.')[0];
+//     const languageKey = rawResult.split('.')[1];
+//     const languageFileContent = require(languageFile);
+//     const languageFileContentJson = JSON.parse(languageFileContent);
+
+//     // check language key is already exists
+//     if (languageFileContentJson[languageData]) {
+//         Helpers.showErrorMessage('Language data already exists');
+//         return;
+//     }
+// });
