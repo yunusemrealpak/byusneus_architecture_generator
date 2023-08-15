@@ -103,17 +103,7 @@ export class Commands {
     }
 
     public static async addLanguageKeysToLanguageFiles(): Promise<void> {
-        const languageFileNames = await vscode.window.showInputBox({
-            prompt: "Enter language file names",
-            placeHolder: "tr, en // tr-TR, en-US",
-        });
-
-        if (!languageFileNames) {
-            Helpers.showErrorMessage('Please enter a valid language file names');
-            return;
-        }
-
-        let languageFileNameArray = languageFileNames.split(',');
+        const languageFiles = await FilePaths.languagePaths();
 
         const rawResult = await vscode.window.showInputBox({
             prompt: "Enter language key",
@@ -130,26 +120,21 @@ export class Commands {
         let groups = result.slice(0, -1);
         let key = result.pop() as string;
 
-        Helpers.showInformationMessage(`Groups: ${groups} Key: ${key}`);
-
         let meanings: string[] = [];
 
-        for (const file of languageFileNameArray) {
+        for (const file of languageFiles) {
             const meaning = await vscode.window.showInputBox({
-                prompt: `Enter ${file} language meaning`,
-                placeHolder: `<${file}> meaning`,
+                prompt: `Enter ${file.code} language meaning`,
+                placeHolder: `<${file.code}> meaning`,
             });
 
             if (!meaning) {
-                Helpers.showErrorMessage(`Please enter a valid ${file} language meaning`);
+                Helpers.showErrorMessage(`Please enter a valid ${file.code} language meaning`);
                 return;
             }
 
             meanings.push(meaning);
         }
-
-        // get all language files like tr.json, en.json
-        const languageFiles = FilePaths.languagePaths(languageFileNameArray);
 
         // rawResult is language key like 'labels.modal_guest_title'
         // split it by '.' and get first item like 'labels'. It is language group. Second item is language key

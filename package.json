@@ -50,18 +50,18 @@
       },
       {
         "command": "byusneus-architecture-generator.addLanguageKeysToLanguageFiles",
-        "title": "Add Language Keys To Language Files",
-        "category": "Byusneus Architecture Helpers"
+        "title": "Add Language Key",
+        "category": "Byusneus Helpers"
       },
       {
         "command": "byusneus-architecture-generator.upgradeDartPackages",
         "title": "Upgrade Dart Packages",
-        "category": "Byusneus Architecture Helpers"
+        "category": "Byusneus Helpers"
       },
       {
         "command": "byusneus-architecture-generator.updatePods",
         "title": "Update Pods",
-        "category": "Byusneus Architecture Helpers"
+        "category": "Byusneus Helpers"
       }
     ]
   },
