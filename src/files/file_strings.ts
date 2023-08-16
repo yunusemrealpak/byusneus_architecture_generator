@@ -1,7 +1,7 @@
 // create a static class with a method that returns a string for dart class file
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { Helpers } from "../helpers/helpers";
+import { Functions } from "../commands/functions";
 import { LayerType } from "../helpers/layer_type";
 import { Strings } from "./strings";
 
@@ -24,7 +24,7 @@ export class FileStrings {
     }
 
     public static getModuleFilePath(className: string, layerType: LayerType): string[] {
-        let layerPath = Helpers.getLayerPath(layerType);
+        let layerPath = Functions.getLayerPath(layerType);
         let modulePath = layerPath + '/' + className;
 
         if (!fs.existsSync(modulePath)) {

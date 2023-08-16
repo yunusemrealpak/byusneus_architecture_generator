@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 		{ name: 'upgradeDartPackages', command: Commands.upgradeDartPackages },
 		{ name: 'updatePods', command: Commands.updatePods },
 		{ name: 'addLanguageKeysToLanguageFiles', command: Commands.addLanguageKeysToLanguageFiles },
+		{ name: 'createTestModule', command: Commands.createTestModule },
 	];
 
 	commands.forEach((cmd) => {

@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { FileStrings } from '../files/file_strings';
-import { Helpers } from '../helpers/helpers';
 import { LayerType } from '../helpers/layer_type';
 import { FilePaths } from '../files/file_paths';
 import { PubspecHelpers } from '../helpers/pubspec_helpers';
+import { Functions } from './functions';
+import { Helpers } from '../helpers/helpers';
 
 export class Commands {
     public static async cloneByusneusArchitecture(): Promise<void> {
@@ -39,7 +40,7 @@ export class Commands {
             return;
         }
 
-        Helpers.createFile(rawResult, selectedLayerType);
+        Functions.createFile(rawResult, selectedLayerType);
 
         Helpers.showInformationMessage('Module created successfully');
     }
@@ -148,13 +149,13 @@ export class Commands {
 
             let group = languageFileContentJson;
             groups.forEach((groupItem) => {
-                if(!group[groupItem]) {
+                if (!group[groupItem]) {
                     group[groupItem] = {};
                 }
                 group = group[groupItem];
             });
 
-            if(group[key]) {
+            if (group[key]) {
                 Helpers.showErrorMessage('Language key already exists');
                 return;
             }
@@ -170,5 +171,30 @@ export class Commands {
 
 
         Helpers.showInformationMessage('Language key added successfully');
+    }
+
+    public static async createTestModule(): Promise<void> {
+        const moduleName = await vscode.window.showInputBox({
+            prompt: "Enter test module name",
+            placeHolder: "Test module names (auth, chat, home ...)",
+        });
+
+        if (!moduleName) {
+            vscode.window.showErrorMessage('Please enter a valid module name');
+            return;
+        }
+        const scenarioListStr = await vscode.window.showInputBox({
+            prompt: "Enter test module scenarios",
+            placeHolder: "to specify scenarios use comma(,) like 'AuthLoginScenario,AuthRegisterScenario ...'",
+        });
+
+        if (!scenarioListStr) {
+            vscode.window.showErrorMessage('Please enter a valid module name');
+            return;
+        }
+
+        Functions.createTestFile(moduleName, scenarioListStr.split(',').map((scenario) => scenario.trim()));
+
+        Helpers.showInformationMessage('Module created successfully');
     }
 }

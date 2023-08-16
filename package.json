@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -61,6 +61,11 @@
       {
         "command": "byusneus-architecture-generator.updatePods",
         "title": "Update Pods",
+        "category": "Byusneus Helpers"
+      },
+      {
+        "command": "byusneus-architecture-generator.createTestModule",
+        "title": "Create Test Module",
         "category": "Byusneus Helpers"
       }
     ]

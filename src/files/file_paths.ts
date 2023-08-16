@@ -22,6 +22,22 @@ export class FilePaths {
         return [...values];
     }
 
+    public static get testRunnerClassPath(): string | undefined {
+        if (this.rootPath === undefined) {
+            return undefined;
+        }
+
+        return this.rootPath + '/integration_test/test/';
+    }
+
+    public static get testRobotClassPath(): string | undefined {
+        if (this.rootPath === undefined) {
+            return undefined;
+        }
+
+        return this.rootPath + '/integration_test/robot';
+    }
+
     public static get androidPath(): string | undefined {
         if (this.rootPath === undefined) {
             return undefined;
