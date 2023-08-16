@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -51,6 +51,16 @@
       {
         "command": "byusneus-architecture-generator.addLanguageKeysToLanguageFiles",
         "title": "Add Language Key",
+        "category": "Byusneus Helpers"
+      },
+      {
+        "command": "byusneus-architecture-generator.updateLanguageKeys",
+        "title": "Update Language Key",
+        "category": "Byusneus Helpers"
+      },
+      {
+        "command": "byusneus-architecture-generator.removeLanguageKeys",
+        "title": "Remove Language Key",
         "category": "Byusneus Helpers"
       },
       {

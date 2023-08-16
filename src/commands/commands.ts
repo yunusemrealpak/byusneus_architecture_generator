@@ -120,6 +120,8 @@ export class Commands {
         let result = rawResult.split('.');
         let groups = result.slice(0, -1);
         let key = result.pop() as string;
+        key = key.trim();
+        key = Helpers.convertToCamelCase(key);
 
         let meanings: string[] = [];
 
@@ -171,6 +173,124 @@ export class Commands {
 
 
         Helpers.showInformationMessage('Language key added successfully');
+    }
+
+    public static async updateLanguageKeys(): Promise<void> {
+        const languageFiles = await FilePaths.languagePaths();
+
+        const rawResult = await vscode.window.showInputBox({
+            prompt: "Enter language key to update",
+            placeHolder: "language key after dot as in LocaleKeys.<language_key>",
+        });
+
+        if (!rawResult) {
+            Helpers.showErrorMessage('Please enter a valid language key');
+            return;
+        }
+
+        let result = rawResult.split('_');
+        let groups = result.slice(0, -1);
+        let key = result.pop() as string;
+        key = key.trim();
+
+        let meanings: string[] = [];
+
+        for (const file of languageFiles) {
+            const meaning = await vscode.window.showInputBox({
+                prompt: `Enter ${file.code} language meaning`,
+                placeHolder: `<${file.code}> meaning`,
+            });
+
+            if (!meaning) {
+                Helpers.showErrorMessage(`Please enter a valid ${file.code} language meaning`);
+                return;
+            }
+
+            meanings.push(meaning);
+        }
+
+        languageFiles.forEach((languageFile, index) => {
+
+            const languageFileContent = fs.readFileSync(languageFile.path, 'utf-8');
+
+            let languageFileContentJson = JSON.parse(languageFileContent);
+            
+            let group = languageFileContentJson;
+            groups.forEach((groupItem) => {
+                if (!group[groupItem]) {
+                    Helpers.showErrorMessage('Language key does not exist');
+                    return;
+                }
+                group = group[groupItem];
+            });
+
+            group[key] = meanings[index];
+
+            fs.writeFileSync(languageFile.path, JSON.stringify(languageFileContentJson, null, 2));
+
+            setTimeout(() => {
+                Helpers.runFlutterCreateCommand('sh ./scripts/localization.sh');
+            }, 1000);
+        });
+
+        Helpers.showInformationMessage('Language key updated successfully');
+    }
+
+    public static async removeLanguageKeys(): Promise<void> {
+        const languageFiles = await FilePaths.languagePaths();
+
+        const rawResult = await vscode.window.showInputBox({
+            prompt: "Enter language key to remove",
+            placeHolder: "language key after dot as in LocaleKeys.<language_key>",
+        });
+
+        if (!rawResult) {
+            Helpers.showErrorMessage('Please enter a valid language key');
+            return;
+        }
+
+        let result = rawResult.split('_');
+        let groups = result.slice(0, -1);
+        let key = result.pop() as string;
+        key = key.trim();
+
+        languageFiles.forEach((languageFile) => {
+
+            const languageFileContent = fs.readFileSync(languageFile.path, 'utf-8');
+
+            let languageFileContentJson = JSON.parse(languageFileContent);
+
+            let group = languageFileContentJson;
+            groups.forEach((groupItem) => {
+                if (!group[groupItem]) {
+                    Helpers.showErrorMessage('Language key does not exist');
+                    return;
+                }
+                group = group[groupItem];
+            });
+            
+            if (group[key]) {
+                delete group[key];
+            }
+
+            if (Object.keys(group).length === 0) {
+                groups.forEach((groupItem, index) => {
+                    if (index === 0) {
+                        delete languageFileContentJson[groupItem];
+                    } else {
+                        delete languageFileContentJson[groups[index - 1]][groupItem];
+                    }
+                });
+            }
+
+            fs.writeFileSync(languageFile.path, JSON.stringify(languageFileContentJson, null, 2));
+
+            setTimeout(() => {
+                Helpers.runFlutterCreateCommand('sh ./scripts/localization.sh');
+            }, 1000);
+        });
+
+        Helpers.showInformationMessage('Language key removed successfully');
     }
 
     public static async createTestModule(): Promise<void> {
