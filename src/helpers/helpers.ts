@@ -25,9 +25,27 @@ export class Helpers {
         vscode.window.showErrorMessage(message);
     }
 
+    public static convertFirstLetterUpperCase(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     public static convertToCamelCase(str: string): string {
         return str.replace(/[-_](.)/g, function (match, group1) {
             return group1.toUpperCase();
         });
     }
+
+    public static convertToPascalCase(input: string, withSpace: boolean = false): string {
+        const words = input.split('_');
+        const pascalCaseWords = words.map((word) => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+
+        if(withSpace) {
+            return pascalCaseWords.join(' ');
+        }
+
+        return pascalCaseWords.join('');
+    }
+
 }

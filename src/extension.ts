@@ -12,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 		{ name: 'updatePods', command: Commands.updatePods },
 		{ name: 'addLanguageKeysToLanguageFiles', command: Commands.addLanguageKeysToLanguageFiles },
 		{ name: 'createTestModule', command: Commands.createTestModule },
+		{ name: 'createTestModuleScene', command: Commands.createTestScene },
 		{ name: 'updateLanguageKeys', command: Commands.updateLanguageKeys },
 		{ name: 'removeLanguageKeys', command: Commands.removeLanguageKeys },
 	];

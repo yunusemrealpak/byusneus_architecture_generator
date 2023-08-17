@@ -4,6 +4,7 @@ import { LayerType } from "../helpers/layer_type";
 import { FileStrings } from "../files/file_strings";
 import { FilePaths } from "../files/file_paths";
 import { Strings } from "../files/strings";
+import { Helpers } from "../helpers/helpers";
 
 export class Functions {
     public static createFile(className: string, layerType: LayerType): void {
@@ -38,33 +39,62 @@ export class Functions {
         });
     }
 
-    public static createTestFile(moduleName: string, scenarioList: string[]): void {
+    public static createTestModule(moduleName: string, sceneList: string[]): void {
         const robotPath = FilePaths.testRobotClassPath;
         const modulePath = `${robotPath}/${moduleName}`;
-        const scenarioPath = `${modulePath}/scenarios`;
+        const scenesPath = `${modulePath}/scenes`;
 
         this.createFolder(modulePath);
-        this.createFolder(scenarioPath);
+        this.createFolder(scenesPath);
+        
+        let robotImports: string[] = [];
+        let testImports: string[] = [];
+        sceneList.map((scene) => {
+            const scenePath = `${scenesPath}/${moduleName}_${scene}`;
 
-        let imports = scenarioList.map((scenario) => {
-            let val = scenario.replace(/([A-Z])/g, "_$1").toLowerCase().slice(1);
-            let scenarioClassName = val.split('_').splice(1);
+            this.createFolder(scenePath);
             
-            this.createFolder(`${scenarioPath}/${scenarioClassName}`);
+            const scenarioInterfaceFilePath = `${scenePath}/i_${moduleName}_${scene}_scene.dart`;
+            const scenarioFilePath = `${scenePath}/${moduleName}_${scene}_scene.dart`;
 
-            const scenarioInterfaceFilePath = `${scenarioPath}/${scenarioClassName}/i_${val}_scenario.dart`;
-            const scenarioFilePath = `${scenarioPath}/${scenarioClassName}/${val}_scenario.dart`;
+            fs.writeFileSync(scenarioInterfaceFilePath, new Strings('').getTestSceneInterfaceClassString(moduleName, scene));
+            fs.writeFileSync(scenarioFilePath, new Strings('').getTestSceneClassString(moduleName, scene));
 
-            fs.writeFileSync(scenarioInterfaceFilePath, new Strings('').getTestScenarioInterfaceClassString(scenario));
-            fs.writeFileSync(scenarioFilePath, new Strings('').getTestScenarioClassString(scenario));
-
-            return `import 'scenarios/${scenarioClassName}/${val}_scenario.dart';`;
+            robotImports.push(`import 'scenes/${moduleName}_${scene}/${moduleName}_${scene}_scene.dart';`);
+            testImports.push(`import '../robot/${moduleName}/scenes/${moduleName}_${scene}/${moduleName}_${scene}_scene.dart';`);
         });
 
-        fs.writeFileSync(`${modulePath}/${moduleName}_robot.dart`, new Strings(moduleName).getTestModuleClassString(imports.join('\n'), scenarioList));
+        fs.writeFileSync(`${modulePath}/${moduleName}_robot.dart`, new Strings(moduleName).getTestModuleClassString(robotImports.join('\n'), sceneList));
 
         const testRunnerClassPath = FilePaths.testRunnerClassPath + moduleName + '_test.dart';
-        fs.writeFileSync(testRunnerClassPath, new Strings('').getTestRunnerClassString(moduleName, scenarioList));
+        fs.writeFileSync(testRunnerClassPath, new Strings('').getTestRunnerClassString(moduleName, sceneList, testImports.join('\n')));
+    }
+
+    public static async createTestModuleScene(modulePath: string, scene: string): Promise<void> {
+        const module = modulePath.split('/').pop() as string;
+        const scenePath = `${modulePath}/scenes`;
+        const sceneFolderPath = `${scenePath}/${module}_${scene}`;
+
+        this.createFolder(sceneFolderPath);
+        const scenarioInterfaceFilePath = `${sceneFolderPath}/i_${module}_${scene}_scene.dart`;
+        const scenarioFilePath = `${sceneFolderPath}/${module}_${scene}_scene.dart`;
+
+        fs.writeFileSync(scenarioInterfaceFilePath, new Strings('').getTestSceneInterfaceClassString(module, scene));
+        fs.writeFileSync(scenarioFilePath, new Strings('').getTestSceneClassString(module, scene));
+
+        const sceneList = (await FilePaths.getSceneList(modulePath)).map((scene) => scene.replace(`${module}_`, ''));
+        
+        let robotImports: string[] = [];
+        let testImports: string[] = [];
+        sceneList.map((scene) => {
+            robotImports.push(`import 'scenes/${module}_${scene}/${module}_${scene}_scene.dart';`);
+            testImports.push(`import '../robot/${module}/scenes/${module}_${scene}/${module}_${scene}_scene.dart';`);
+        });
+
+        fs.writeFileSync(`${modulePath}/${module}_robot.dart`, new Strings(module).getTestModuleClassString(robotImports.join('\n'), sceneList));
+
+        const testRunnerClassPath = FilePaths.testRunnerClassPath + module + '_test.dart';
+        fs.writeFileSync(testRunnerClassPath, new Strings('').getTestRunnerClassString(module, sceneList, testImports.join('\n')));   
     }
 
     public static createFolder(folderPath: string): void {

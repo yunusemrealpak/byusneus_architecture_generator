@@ -1,7 +1,18 @@
 import * as vscode from 'vscode';
 import { LanguageFile } from '../models/language_file';
+import { TestModuleFile } from '../models/test_module_file';
 
 export class FilePaths {
+    static async getSceneList(modulePath: string) : Promise<string[]> {
+        const scenesPath = `${modulePath}/scenes`;
+        const scenesPromise = vscode.workspace.fs.readDirectory(vscode.Uri.file(scenesPath)).then(files => {
+            return files.filter(file => file[1] === vscode.FileType.Directory).map(file => file[0]);
+        });
+
+        const scenes = (await scenesPromise).values();
+
+        return [...scenes];
+    }
     public static async languagePaths(): Promise<LanguageFile[]> {
         if (this.rootPath === undefined) {
             return [];
@@ -15,6 +26,24 @@ export class FilePaths {
 
         const files = languageFileNames.then(languageFileNames => {
             return languageFileNames.map(languageFileName => new LanguageFile(languageFileName, `${this.rootPath}/assets/i10n/${languageFileName}.json`));
+        });
+        
+        const values = (await files).values();
+
+        return [...values];
+    }
+
+    public static async testModulePaths(): Promise<TestModuleFile[]> {
+        if (this.rootPath === undefined) {
+            return [];
+        }
+
+        const testModleFileNames = vscode.workspace.fs.readDirectory(vscode.Uri.file(`${this.rootPath}/integration_test/robot`)).then(files => {
+            return files.filter(file => file[1] === vscode.FileType.Directory).map(file => file[0]);
+        });
+
+        const files = testModleFileNames.then(testModleFileNames => {
+            return testModleFileNames.map(testModleFileName => new TestModuleFile(testModleFileName, `${this.rootPath}/integration_test/robot/${testModleFileName}`));
         });
         
         const values = (await files).values();

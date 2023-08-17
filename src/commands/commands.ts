@@ -108,7 +108,7 @@ export class Commands {
 
         const rawResult = await vscode.window.showInputBox({
             prompt: "Enter language key",
-            placeHolder: "to specify groups use dot(.) like 'group.key'",
+            placeHolder: "to specify groups use dot(.) like '<group>.<key>', ex: 'labels.modalGuestTitle'",
         });
 
         if (!rawResult) {
@@ -214,7 +214,7 @@ export class Commands {
             const languageFileContent = fs.readFileSync(languageFile.path, 'utf-8');
 
             let languageFileContentJson = JSON.parse(languageFileContent);
-            
+
             let group = languageFileContentJson;
             groups.forEach((groupItem) => {
                 if (!group[groupItem]) {
@@ -268,7 +268,7 @@ export class Commands {
                 }
                 group = group[groupItem];
             });
-            
+
             if (group[key]) {
                 delete group[key];
             }
@@ -304,8 +304,8 @@ export class Commands {
             return;
         }
         const scenarioListStr = await vscode.window.showInputBox({
-            prompt: "Enter test module scenarios",
-            placeHolder: "to specify scenarios use comma(,) like 'AuthLoginScenario,AuthRegisterScenario ...'",
+            prompt: "Enter test module scenes",
+            placeHolder: "to specify scenes use comma(,) like 'login, register, company_details ...'",
         });
 
         if (!scenarioListStr) {
@@ -313,8 +313,45 @@ export class Commands {
             return;
         }
 
-        Functions.createTestFile(moduleName, scenarioListStr.split(',').map((scenario) => scenario.trim()));
+        let scenarioList = scenarioListStr.split(',').map((scenario) => scenario.trim());
+        Functions.createTestModule(moduleName, scenarioList);
 
         Helpers.showInformationMessage('Module created successfully');
+    }
+
+    public static async createTestScene(): Promise<void> {
+        const testModules = await FilePaths.testModulePaths();
+
+        const selectedModule = await vscode.window.showQuickPick(
+            testModules.map((testModule) => testModule.module),
+            {
+                canPickMany: false,
+                placeHolder: "Select test module",
+            }
+        );
+
+        if (!selectedModule) {
+            vscode.window.showErrorMessage('Please select at least one layer type');
+            return;
+        }
+
+        const testModule = testModules.find((testModule) => testModule.module === selectedModule);
+
+        if (!testModule) {
+            vscode.window.showErrorMessage('Please select at least one layer type');
+            return;
+        }
+
+        const sceneName = await vscode.window.showInputBox({
+            prompt: "Enter test scene name",
+            placeHolder: "Test scene names (login, register, company_details ...)",
+        });
+
+        if (!sceneName) {
+            vscode.window.showErrorMessage('Please enter a valid scene name');
+            return;
+        }
+
+        Functions.createTestModuleScene(testModule.path, sceneName);
     }
 }

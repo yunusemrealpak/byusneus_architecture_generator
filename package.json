@@ -9,7 +9,7 @@
     "email": "yunusemrealpak@gmail.com"
   },
   "license": "MIT",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "engines": {
     "vscode": "^1.81.0"
   },
@@ -76,6 +76,11 @@
       {
         "command": "byusneus-architecture-generator.createTestModule",
         "title": "Create Test Module",
+        "category": "Byusneus Helpers"
+      },
+      {
+        "command": "byusneus-architecture-generator.createTestModuleScene",
+        "title": "Add Test Module Scene",
         "category": "Byusneus Helpers"
       }
     ]

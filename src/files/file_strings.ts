@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { Functions } from "../commands/functions";
 import { LayerType } from "../helpers/layer_type";
 import { Strings } from "./strings";
+import { FilePaths } from './file_paths';
 
 export class FileStrings {
     public static getDartClassString(className: string, layerType: LayerType): string[] {
